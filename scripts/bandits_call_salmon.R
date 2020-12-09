@@ -128,8 +128,8 @@ transcripts_to_keep = filter_transcripts(gene_to_transcript = gene_tr_id,
 #compute prior -> left out because of complications as reported by author
 #message("computing informative prior...")
 #system.time(precision <- prior_precision(gene_to_transcript=gene_tr_id,
-                             transcript_counts=counts, n_cores=ncores,
-                             transcripts_to_keep=transcripts_to_keep))
+#                             transcript_counts=counts, n_cores=ncores,
+#                             transcripts_to_keep=transcripts_to_keep))
 #message("finished computing prior!")
 
 message("doing differential test...")
@@ -144,7 +144,7 @@ system.time(results <- test_DTU(BANDITS_data=input_data,
                     #precision=precision$prior,
                     samples_design=p.data,
                     group_col_name="condition",
-                    n_cores=1,
+                    n_cores=ncores,
                     gene_to_transcript=gene_tr_id))
 message("finished the computation")
 
