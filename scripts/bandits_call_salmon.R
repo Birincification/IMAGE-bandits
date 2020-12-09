@@ -8,7 +8,7 @@ parser <- ArgumentParser()
 parser$add_argument('--gtf', required=FALSE)
 parser$add_argument('--cdna', required=FALSE)
 parser$add_argument('--tx2gene', required=FALSE)
-parser$add_argument('--tool', default="kallisto", choices=c("kallisto", "salmon")) # kallisto or salmon
+# parser$add_argument('--tool', default="kallisto", choices=c("kallisto", "salmon")) # kallisto or salmon
 parser$add_argument('--pdata')
 parser$add_argument('--basedir')
 parser$add_argument('--ncores', default=4)
@@ -64,8 +64,8 @@ print(p.data)
 samples <- p.data$sample
 
 ##################################################################################
-if(args$tool == "kallisto")
-{
+#if(args$tool == "kallisto")
+#{
     message(sprintf("reading salmon input from %s for:", args$basedir))
     print(samples)
 
@@ -85,11 +85,11 @@ if(args$tool == "kallisto")
 
     txi = tximport(files = quant_files, type = "salmon", txOut = TRUE)
 
-} else
-{
-    message("only kallisto is tool is implemented yet!")
-    q()
-}
+#} else
+#{
+#    message("only kallisto is tool is implemented yet!")
+#    q()
+#}
 ##################################################################################
 
 counts = txi$counts
@@ -106,8 +106,8 @@ transcripts_to_keep = filter_transcripts(gene_to_transcript = gene_tr_id,
 
 ##################################################################################
 # read equivalence class data
-if(args$tool == "kallisto")
-{
+#if(args$tool == "kallisto")
+#{
     print("reading input data from kallisto...")
     system.time(input_data <- create_data(salmon_or_kallisto="salmon",
                               gene_to_transcript=gene_tr_id,
@@ -118,28 +118,30 @@ if(args$tool == "kallisto")
     print("finished reading input!")
     input_data <- filter_genes(input_data, min_counts_per_gene=20)
 
-} else
-{
-    message("only kallisto is tool is implemented yet!")
-    q()
-}
+#} else
+#{
+#    message("only kallisto is tool is implemented yet!")
+#    q()
+#}
 ##################################################################################
 
-#compute prior
-message("computing informative prior...")
-system.time(precision <- prior_precision(gene_to_transcript=gene_tr_id,
+#compute prior -> left out because of complications as reported by author
+#message("computing informative prior...")
+#system.time(precision <- prior_precision(gene_to_transcript=gene_tr_id,
                              transcript_counts=counts, n_cores=ncores,
                              transcripts_to_keep=transcripts_to_keep))
-message("finished computing prior!")
+#message("finished computing prior!")
 
 message("doing differential test...")
 print(input_data)
-print(precision$prior)
+#print(precision$prior)
 print(p.data)
 
-save(input_data, precision, p.data, gene_tr_id, file="./input_data.RData")
+# save(input_data, precision, p.data, gene_tr_id, file="./input_data.RData")
+# save(input_data, p.data, gene_tr_id, file="./input_data.RData")
+
 system.time(results <- test_DTU(BANDITS_data=input_data,
-                    precision=precision$prior,
+                    #precision=precision$prior,
                     samples_design=p.data,
                     group_col_name="condition",
                     n_cores=1,
